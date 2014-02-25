@@ -65,13 +65,18 @@
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
-
+    
     GKImageCropViewController *cropController = [[GKImageCropViewController alloc] init];
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
-    cropController.preferredContentSize = picker.preferredContentSize;
-#else
-    cropController.contentSizeForViewInPopover = picker.contentSizeForViewInPopover;
-#endif
+    
+    if([GKImageCropViewController instancesRespondToSelector:@selector(preferredContentSize)]){
+        //For >= iOS 7
+        cropController.preferredContentSize = picker.preferredContentSize;
+    }
+    else{
+        //For < iOS 7 to iOS 3.2
+        cropController.contentSizeForViewInPopover = picker.contentSizeForViewInPopover;
+    }
+    
     cropController.sourceImage = [info objectForKey:UIImagePickerControllerOriginalImage];
     cropController.resizeableCropArea = self.resizeableCropArea;
     cropController.cropSize = self.cropSize;

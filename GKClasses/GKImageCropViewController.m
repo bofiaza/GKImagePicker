@@ -97,17 +97,20 @@
     
     CGSize constrainedSize = CGSizeMake(320.f, TOOLBAR_HEIGHT);
     CGSize neededSize = CGSizeMake(0, 0);
-
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
-    neededSize = [string boundingRectWithSize:constrainedSize
-                                      options:NSStringDrawingUsesLineFragmentOrigin
-                                   attributes:attributes
-                                      context:nil].size;
-#else
-    neededSize = [string sizeWithFont:font
+    
+    if([NSString instancesRespondToSelector:@selector(boundingRectWithSize:options:attributes:context:)]){ //For >= iOS 7
+        neededSize = [string boundingRectWithSize:constrainedSize
+                                          options:NSStringDrawingUsesLineFragmentOrigin
+                                       attributes:attributes
+                                          context:nil].size;
+    }
+    else{
+        //For < iOS 7 (to iOS 2)
+        neededSize = [string sizeWithFont:font
                         constrainedToSize:constrainedSize
-                        lineBreakMode:NSLineBreakByTruncatingMiddle];
-#endif
+                            lineBreakMode:NSLineBreakByTruncatingMiddle];
+    }
+    
     return CGSizeMake(neededSize.width, TOOLBAR_HEIGHT);
 }
 
