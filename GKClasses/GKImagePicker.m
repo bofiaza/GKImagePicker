@@ -58,11 +58,9 @@
       
         [self.delegate imagePickerDidCancel:self];
         
-    } else {
-        
-        [self _hideController];
-    
     }
+    
+    [self _hideController];
     
 }
 
